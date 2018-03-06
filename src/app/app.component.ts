@@ -14,7 +14,9 @@ export class AppComponent {
   exibir(){
     this.visivel = true;
   }
-
+  esconder(){
+    this.visivel = false;
+  }
   disciplinas = [
     new Disciplina(1,'Língua Portuguesa',new Professor('Ana'), 'O objetivo norteador da BNCC de Língua Portuguesa ' +
       'é garantir a todos os alunos o acesso aos saberes linguísticos necessários para a ' +
@@ -66,5 +68,6 @@ export class AppComponent {
   limpar(){
     this.selecionado = null;
     this.disciplina = null;
+    this.esconder();
   }
 }
