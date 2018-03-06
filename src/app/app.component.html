@@ -1,26 +1,100 @@
-<h1>Disciplinas</h1>
-<hr>
-<ul>
-    <li *ngFor="let disciplina of disciplinas"
-        [class.selecionado]="selecionado == disciplina">
-        {{disciplina.nome}}
-    </li>
-</ul>
+<div class="modal" tabindex="-1" role="dialog" id="exampleModal" aria-labelledby="exampleModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Visualizando {{nome1}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="cancelar()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>
+          <b>Codigo:</b> {{cod1}}<br>
+          <b>Nome:</b> {{nome1}}<br>
+          <b>Descricao:</b> {{descricao1}}
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cancelar()">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-<h2>Cadastrar</h2>
-<p>Use este formulário para cadastrar uma disciplina.</p>
-<form #cadastro="ngForm" (submit)="salvar()">
-    <div>
-        <label for="nome">Nome</label><br>
-        <input type="text" id="nome" name="nome" [(ngModel)]="nome" required>
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1 class="display-4">Disciplinas</h1>
     </div>
-    <div>
-        <label for="descricao">Descrição</label><br>
-        <textarea id="descricao" name="descricao" [(ngModel)]="descricao"
-                  cols="70" rows="5">
-        </textarea>
+    <div class="col-md-auto">
     </div>
-    <button type="submit" class="btn btn-primary" [disabled]="!cadastro.valid">
-        Salvar
-    </button>
+    <div class="col col-lg-1">
+      <button type="button" class="btn btn-primary btn-lg" (click)="abrirNovo()">Nova</button>
+    </div>
+  </div>
+  <hr class="my-4">
+  <table class="table table-striped table-hover table-sm">
+    <thead class="thead-dark">
+      <tr class="row">
+        <th scope="col" class="col">Codigo</th>
+        <th scope="col" class="col-6">Nome</th>
+        <th scope="col" class="col">Acoes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let disciplina of disciplinas" [class.table-success]="selecionado == disciplina" class="row">
+        <th scope="row" class="col">{{disciplina.cod}}</th>
+        <td class="col-6">{{disciplina.nome}}</td>
+        <td class="col">
+          <div class="row">
+            <div class="col" style="text-align: center;">
+              <button type="button" class="btn btn-sucess" data-toggle="modal" data-target="#exampleModal" (click)="ver(disciplina)">Ver</button>
+            </div>
+            <div class="col" style="text-align: center;">
+              <button type="button" class="btn btn-warning" (click)="editar(disciplina)">Editar</button>
+            </div>
+            <div class="col" style="text-align: center;">
+              <button type="button" class="btn btn-danger" (click)="deletar(disciplina)">Excluir</button>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<hr class="my-4">
+<form #cadastro="ngForm" (submit)="salvar()" *ngIf="visivel==true">
+  <div class="card w-50">
+    <div class="card-body">
+      <h5 class="card-title">Cadastrar</h5>
+      <div class="card-text">
+        <div class="row">
+          <div class="col">
+            <label for="cod">Codigo</label>
+          </div>
+          <div class="col">
+            <input class="form-control" type="number" id="cod" name="cod" [(ngModel)]="cod" style="width: 100%;" required autofocus>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label for="nome">Nome</label>
+          </div>
+          <div class="col">
+            <input class="form-control" type="text" id="nome" name="nome" [(ngModel)]="nome" style="width: 100%;" required>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label for="descricao">Descrição</label>
+          </div>
+          <div class="col">
+            <textarea class="form-control" id="descricao" name="descricao" [(ngModel)]="descricao" style="width: 100%;" rows="5"></textarea>
+          </div>
+        </div>
+      </div>
+      <button type="reset" class="btn btn-danger" (click)="cancelar()">Cancelar</button>
+      <button type="submit" (click)="salvar()" class="btn btn-light" [disabled]="!cadastro.valid">Salvar</button>
+    </div>
+  </div>
 </form>
