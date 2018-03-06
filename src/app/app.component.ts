@@ -9,9 +9,12 @@ import {Professor} from './professor.model';
 })
 export class AppComponent {
   selecionado = null;
-  disciplina1 = null;
-  title = 'Linguagem de Programacao para Web';
-  
+  disciplina = null;
+  visivel = false;
+  exibir(){
+    this.visivel = true;
+  }
+
   disciplinas = [
     new Disciplina(1,'Língua Portuguesa',new Professor('Ana'), 'O objetivo norteador da BNCC de Língua Portuguesa ' +
       'é garantir a todos os alunos o acesso aos saberes linguísticos necessários para a ' +
@@ -57,13 +60,11 @@ export class AppComponent {
 
   selecionar(disciplina) {
     this.selecionado = disciplina;
-    this.disciplina1=disciplina;
+    this.disciplina = disciplina;
+    this.exibir();
   }
   limpar(){
-    this.selecionado=null;
-    this.disciplina1=null;
-  }
-  novoTitulo(titulo: string){
-    this.title=titulo;
+    this.selecionado = null;
+    this.disciplina = null;
   }
 }
