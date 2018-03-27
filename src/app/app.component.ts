@@ -1,5 +1,7 @@
 import {Component} from '@angular/core';
 import {Disciplina} from './disciplina.model';
+import {DateFormatter} from '@angular/common/src/pipes/deprecated/intl';
+import {forEach} from '@angular/router/src/utils/collection';
 
 @Component({
   selector: 'app-root',
@@ -10,79 +12,110 @@ export class AppComponent {
   editando = null;
   nome = null;
   descricao = null;
+  codigo = null;
+  data = null;
+  estaativo = null;
+  tipo = null;
+  periodo = null;
   excluir_ok = false;
   editar_ok = false;
   salvar_ok = false;
+  texto = null;
+  disciplinas = [];
+  disciplina = null;
+  keys = [];
+  num = 0;
+  cont = localStorage.length;
+  limpar(){
+    localStorage.clear();
+    this.disciplinas.length=0;
+  }
+  baixa(){
+    this.disciplinas.length = 0;
+    while(this.num < this.cont){
+      this.disciplina = JSON.parse(window.localStorage.getItem(localStorage.key(this.num)));
+      console.log(this.disciplina)
+      this.disciplinas.push(this.disciplina);
+      this.num = this.num + 1;
+    }
+    this.num = 0;
+  }
+  /*
   disciplinas = [
-    new Disciplina('Língua Portuguesa', 'O objetivo norteador da BNCC de ' +
-      'Língua Portuguesa é garantir a todos os alunos o acesso aos saberes ' +
-      'linguísticos necessários para a participação social e o exercício da ' +
-      'cidadania, pois é por meio da língua que o ser ' +
-      'humano pensa, comunica-se, tem acesso à informação, expressa e ' +
-      'defende pontos de vista, partilha ou constrói visões de mundo e ' +
-      'produz conhecimento.'),
-    new Disciplina('Educação Física', 'A Educação Física é o componente ' +
-      'curricular que tematiza as práticas corporais em suas diversas formas ' +
-      'de codificação e significação social, entendidas como manifestações ' +
-      'das possibilidades expressivas dos sujeitos e patrimônio cultural ' +
-      'da humanidade. Nessa concepção, o movimento humano está sempre ' +
-      'inserido no âmbito da cultura e não se limita a ' +
-      'um deslocamento espaço-temporal de um segmento corporal ' +
-      'ou de um corpo todo. Logo, as práticas corporais são textos culturais ' +
-      'passíveis de leitura e produção.'),
-    new Disciplina('Inglês', 'Aprender a língua inglesa propicia a criação ' +
-      'de novas formas de engajamento e participação dos alunos em um mundo ' +
-      'social cada vez mais globalizado e plural, em que as fronteiras ' +
-      'entre países e interesses pessoais, locais, regionais, nacionais ' +
-      'e transnacionais estão cada vez mais difusas e contraditórias. ' +
-      'Assim, o estudo da língua inglesa possibilita aos alunos ampliar ' +
-      'horizontes de comunicação e de intercâmbio cultural, científico ' +
-      'e acadêmico e, nesse sentido, abre novos percursos de acesso, ' +
-      'construção de conhecimentos e participação social. É esse caráter ' +
-      'formativo que inscreve a aprendizagem de inglês em uma perspectiva ' +
-      'de educação linguística, consciente e crítica, na qual as dimensões ' +
-      'pedagógicas e políticas são intrinsecamente ligadas.'),
-    new Disciplina('Matemática', 'No Ensino Fundamental, essa área, por ' +
-      'meio da articulação de seus diversos campos – Aritmética, Álgebra, ' +
-      'Geometria, Estatística e Probabilidade – precisa garantir que os ' +
-      'alunos relacionem observações empíricas do mundo real a ' +
-      'representações (tabelas, figuras e esquemas) e associem essas ' +
-      'representações a uma atividade matemática, conceitos e ' +
-      'propriedades, fazendo induções e conjecturas. Assim, espera-se ' +
-      'que eles desenvolvam a capacidade de identificar oportunidades ' +
-      'de utilização da matemática para resolver problemas, aplicando ' +
-      'conceitos, procedimentos e resultados para obter soluções e ' +
-      'interpretá-las segundo os contextos das situações. A dedução de ' +
-      'algumas propriedades e a verificação de conjecturas, a partir ' +
-      'de outras, podem ser estimuladas, sobretudo ao final do ' +
-      'Ensino Fundamental.'),
-    new Disciplina('Ciências', 'Ao estudar Ciências, as pessoas aprendem ' +
-      'a respeito de si mesmas, da diversidade e dos processos de evolução ' +
-      'e manutenção da vida, do mundo material – com os seus recursos ' +
-      'naturais, suas transformações e fontes de energia –, do nosso ' +
-      'planeta no Sistema Solar e no Universo e da aplicação dos ' +
-      'conhecimentos científicos nas várias esferas da vida humana. ' +
-      'Essas aprendizagens, entre outras, possibilitam que os alunos ' +
-      'compreendam, expliquem e intervenham no mundo em que vivem.')
+    new Disciplina(
+      0,
+      'Língua Portuguesa',
+      'texto sobre PORTUGUES',
+       null,
+      true,
+      'principal',
+      7
+    ),
+    new Disciplina(
+      1,
+      'Matematica',
+      'texto sobre MATEMATICA',
+      null,
+      false,
+      'secundaria',
+      4
+    )
   ];
+  */
 
   salvar() {
     if (this.editando) {
       this.editando.nome = this.nome;
       this.editando.descricao = this.descricao;
+      this.editando.codigo = this.codigo;
+      this.editando.data = this.data;
+      this.editando.estaativo = this.estaativo;
+      this.editando.tipo = this.tipo;
+      this.editando.periodo = this.periodo;
       this.editar_ok = true;
+      this.texto = {
+        codigo:  this.editando.codigo,
+        nome: this.editando.nome,
+        descricao: this.editando.descricao,
+        data: this.editando.data,
+        estaativo: this.editando.estaativo,
+        tipo: this.editando.tipo,
+        periodo: this.editando.periodo
+      };
+      window.localStorage.setItem(this.editando.codigo, JSON.stringify(this.texto));
+      console.log(this.texto);
     } else {
-      const d = new Disciplina(this.nome, this.descricao);
+      const d = new Disciplina(this.codigo, this.nome, this.descricao, this.data, this.estaativo, this.tipo, this.periodo);
+      this.editar_ok = true;
+      this.texto = {
+        codigo:  d.codigo,
+        nome: d.nome,
+        descricao: d.descricao,
+        data: d.data,
+        estaativo: d.estaativo,
+        tipo: d.tipo,
+        periodo: d.periodo
+      };
+      window.localStorage.setItem(this.codigo + "", JSON.stringify(this.texto));
+      console.log(this.texto);
       this.disciplinas.push(d);
       this.salvar_ok = true;
+
     }
+    this.baixa();
     this.nome = null;
     this.descricao = null;
+    this.codigo = null;
+    this.data = null;
+    this.estaativo = null;
+    this.tipo = null;
+    this.periodo = null;
     this.editando = null;
   }
 
   excluir(disciplina) {
     this.redefinir();
+    // tslint:disable-next-line:triple-equals
     if (this.editando == disciplina) {
       alert('Você não pode excluir uma disciplina que está editando');
     } else {
@@ -90,6 +123,8 @@ export class AppComponent {
           + disciplina.nome + '"?')) {
         const i = this.disciplinas.indexOf(disciplina);
         this.disciplinas.splice(i, 1);
+        const j = localStorage.key(disciplina.codigo);
+        localStorage.removeItem(j);
         this.excluir_ok = true;
       }
     }
@@ -97,9 +132,14 @@ export class AppComponent {
 
   editar(disciplina) {
     this.redefinir();
+    this.editando = disciplina;
     this.nome = disciplina.nome;
     this.descricao = disciplina.descricao;
-    this.editando = disciplina;
+    this.codigo = disciplina.codigo;
+    this.data = disciplina.data;
+    this.estaativo = disciplina.estaativo;
+    this.tipo = disciplina.tipo;
+    this.periodo = disciplina.periodo;
   }
 
   cancelar() {
@@ -109,6 +149,11 @@ export class AppComponent {
   redefinir() {
     this.nome = null;
     this.descricao = null;
+    this.codigo = null;
+    this.data = null;
+    this.estaativo = null;
+    this.tipo = null;
+    this.periodo = null;
     this.editando = null;
     this.excluir_ok = false;
     this.salvar_ok = false;

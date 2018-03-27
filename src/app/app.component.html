@@ -1,3 +1,4 @@
+{{baixa()}}
 <div class="container">
     <h1>Disciplinas</h1>
     <hr>
@@ -17,11 +18,10 @@
             <td>
                 <i *ngIf="editando == disciplina"
                    class="fa fa-pencil-square"></i>
-                {{disciplina.nome}}
+                {{disciplina.codigo}} - {{disciplina.nome}}
             </td>
             <td>
-                <button class="btn btn-sm btn-danger"
-                        (click)="excluir(disciplina)">
+                <button class="btn btn-sm btn-danger" (click)="excluir(disciplina)">
                     <i class="fa fa-trash"></i> Excluir
                 </button>
                 <button class="btn btn-sm btn-primary"
@@ -32,26 +32,73 @@
         </tr>
         </tbody>
     </table>
+  <button class="btn btn-sm btn-danger" (click)="limpar()">
+    <i class="fa fa-trash"></i> LIMPAR
+  </button>
 
+    <!--
     <h2>Cadastrar</h2>
     <p>Use este formulário para cadastrar ou editar uma disciplina.</p>
+    -->
     <div *ngIf="salvar_ok || editar_ok" class="alert alert-success">
         <strong>Sucesso!</strong> A disciplina foi cadastrada ou atualizada
         com sucesso.
     </div>
     <form #cadastro="ngForm" (submit)="salvar()">
+      <div class="form-group">
+        <label for="codigo">Codigo</label><br>
+        <input type="number" min="0" height="1" id="codigo" name="codigo" class="form-control" placeholder="Codigo Numeral" [(ngModel)]="codigo" required>
+        <small>Se for escrito um codigo de outra materia existente salvar essa instancia substituira a outra.</small>
+      </div>
         <div class="form-group">
             <label for="nome">Nome</label><br>
-            <input type="text" id="nome" name="nome" class="form-control"
-                   [(ngModel)]="nome"
-                   required>
+            <input type="text" id="nome" name="nome" class="form-control" [(ngModel)]="nome" required>
         </div>
         <div class="form-group">
             <label for="descricao">Descrição</label><br>
-            <textarea id="descricao" name="descricao" class="form-control"
-                      [(ngModel)]="descricao"
-                      cols="70" rows="5"></textarea>
+            <textarea id="descricao" name="descricao" class="form-control" [(ngModel)]="descricao" cols="70" rows="5"></textarea>
         </div>
+        <div class="form-group">
+          <label for="data">Data</label><br>
+          <input type="date" id="data" name="data" class="form-control" ngModel="data" [(ngModel)]="data" useValueAsDate>
+        </div>
+        <div class="form-group" >
+          <fieldset>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="estaativo" id="estaativo" [(ngModel)]="estaativo" [checked]="estaativo">
+            <label class="form-check-label" for="estaativo">
+              Esta Ativo
+            </label>
+          </div>
+          </fieldset>
+        </div>
+
+      <div class="form-group">
+        <div class="custom-control custom-radio">
+          <input type="radio" id="tipo1" name="tipo" [(ngModel)]="tipo" class="custom-control-input" value="principal" [checked]="editando.tipo == 'principal'">
+          <label class="custom-control-label" for="tipo1">Principal <-</label>
+        </div>
+        <div class="custom-control custom-radio">
+          <input type="radio" id="tipo2" name="tipo" [(ngModel)]="tipo" class="custom-control-input" value="secundaria" [checked]="editando.tipo == 'secundaria'">
+          <label class="custom-control-label" for="tipo2">Secundaria</label>
+        </div>
+      </div>
+      <div class="form-group">
+          <label for="periodo">Periodo</label><br>
+          <select  id="periodo" name="periodo" class="form-control custom-select mr-sm-2"
+                 [(ngModel)]="periodo">
+
+            <option selected value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+          </select>
+        </div>
+
         <div class="text-right">
             <button type="submit" class="btn btn-primary"
                     [disabled]="!cadastro.valid">
